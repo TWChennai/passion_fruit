@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.12/jquery-ui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/tag-it.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/serializeObject.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/rethinkdb.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/application.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/flick/jquery-ui.css">
+		<link href="css/jquery.tagit.css" rel="stylesheet" type="text/css">
+	</head>			
+	<body>
+		<form action="#" id="add-tags-form">
+			<fieldset>
+				<label for="name">Name:</label>
+				<input type="text" id="name" name="name" /> <br/>
+				<label for="tags">Tags:</label>
+				<input type="text" id="tags" name="tags" />
+				<input type="submit" name="save" value="Submit" />
+			</fieldset>
+		</form>
+
+		<script type="text/javascript">
+		    $(document).ready(function() {
+		        $("#tags").tagit();
+		    });
+		</script>
+	</body>
+</html>
