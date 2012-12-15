@@ -31,5 +31,11 @@ $(document).ready(function(){
 		});
 	});
 
+	$("#name").autocomplete({
+		source: function( request, response ) {
+			namesStartingWith(request.term, response);
+        }
+    });
+
 
 });
