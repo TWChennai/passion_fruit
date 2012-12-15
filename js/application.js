@@ -1,3 +1,14 @@
+var setUpDatabase = function() {
+  rethinkdb.connect({ host: '10.16.4.39', port: 8080 }, function(conn){
+    rethinkdb.dbList().run().collect(function(existingDbs){
+      if($.inArray('passionfruit', existingDbs) === -1) {
+        rethinkdb.dbCreate('passionfruit').run();
+        rethinkdb.db('passionfruit').tableCreate({tableName: 'passion', primaryKey: 'name'}).run();
+      }
+    });
+  });
+}
+
 var connectToDB = function(callback){
   rethinkdb.connect({ host: '10.16.4.39', port: 8080 }, function(conn){
     console.log("Connected to DB");
@@ -14,20 +25,21 @@ var connectToDB = function(callback){
 var namesStartingWith = function(startingWith, callback) {
   connectToDB(function(table, r) {
     table
-      .filter(r.js("this.user.indexOf('" +  startingWith + "') == 0"))
-      .map(function(passion){return passion('user')})
+      .filter(r.js("this.name.indexOf('" +  startingWith + "') == 0"))
+      .map(function(passion){return passion('name')})
       .run().collect(callback);
   });
 }
 
 $(document).ready(function(){
+  // setUpDatabase();
   $("#add-tags-form").submit(function(e){
     e.preventDefault();
     var formValues = $(e.target).serializeObject();
     var user = formValues["name"];
     var tags = formValues["tags"];
     connectToDB(function(table){
-      table.insert({ user: user, tags: tags.split(",") }).run();
+      table.insert({ name: user, tags: tags.split(",") }).run();
     });
   });
 
