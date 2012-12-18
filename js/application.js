@@ -27,12 +27,31 @@ var namesStartingWith = function(startingWith, callback) {
     table
       .filter(r.js("this.name.indexOf('" +  startingWith + "') == 0"))
       .map(function(passion){return passion('name')})
-      .run().collect(callback);
+      .run()
+      .collect(callback);
   });
 }
 
+var tagsStartingWith = function(startingWith, callback) {
+  connectToDB(function(table, r) {
+    table
+      .concatMap(r.js("this.tags.filter(function(e, i, a){return (e.indexOf('" + startingWith + "') === 0);})"))
+      .run()
+      .collect(callback);
+  });
+}
+
+var allData = function(callback) {
+  connectToDB(function(table, r) {
+    table
+      .distinct()
+      .run()
+      .collect(callback);
+  });  
+}
+
 $(document).ready(function(){
-  // setUpDatabase();
+   setUpDatabase();
   $("#add-tags-form").submit(function(e){
     e.preventDefault();
     var formValues = $(e.target).serializeObject();

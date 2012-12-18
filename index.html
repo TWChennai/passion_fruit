@@ -22,7 +22,11 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
-            $("#tags").tagit();
+            $("#tags").tagit({
+              autocomplete: { source: function( request, response ) {
+                tagsStartingWith(request.term, response);
+              }
+            });
         });
     </script>
   </body>
