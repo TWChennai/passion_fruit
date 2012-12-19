@@ -1,5 +1,5 @@
 var setUpDatabase = function() {
-  rethinkdb.connect({ host: '10.16.4.39', port: 8080 }, function(conn){
+  rethinkdb.connect({ host: '10.16.3.131', port: 8080 }, function(conn){
     rethinkdb.dbList().run().collect(function(existingDbs){
       if($.inArray('passionfruit', existingDbs) === -1) {
         rethinkdb.dbCreate('passionfruit').run();
@@ -10,7 +10,7 @@ var setUpDatabase = function() {
 }
 
 var connectToDB = function(callback){
-  rethinkdb.connect({ host: '10.16.4.39', port: 8080 }, function(conn){
+  rethinkdb.connect({ host: '10.16.3.131', port: 8080 }, function(conn){
     console.log("Connected to DB");
     conn.use('passionfruit');
     var table = rethinkdb.table('passion')
@@ -36,6 +36,7 @@ var tagsStartingWith = function(startingWith, callback) {
   connectToDB(function(table, r) {
     table
       .concatMap(r.js("this.tags.filter(function(e, i, a){return (e.indexOf('" + startingWith + "') === 0);})"))
+      .distinct()
       .run()
       .collect(callback);
   });
