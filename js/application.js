@@ -1,5 +1,8 @@
+var rethinkDBEndpoint = { host: '10.16.3.131', port: 8080 };
+
+
 var setUpDatabase = function() {
-  rethinkdb.connect({ host: '10.16.3.131', port: 8080 }, function(conn){
+  rethinkdb.connect(rethinkDBEndpoint, function(conn){
     rethinkdb.dbList().run().collect(function(existingDbs){
       if($.inArray('passionfruit', existingDbs) === -1) {
         rethinkdb.dbCreate('passionfruit').run();
@@ -10,7 +13,7 @@ var setUpDatabase = function() {
 }
 
 var connectToDB = function(callback){
-  rethinkdb.connect({ host: '10.16.3.131', port: 8080 }, function(conn){
+  rethinkdb.connect(rethinkDBEndpoint, function(conn){
     console.log("Connected to DB");
     conn.use('passionfruit');
     var table = rethinkdb.table('passion')
@@ -45,14 +48,15 @@ var tagsStartingWith = function(startingWith, callback) {
 var allData = function(callback) {
   connectToDB(function(table, r) {
     table
+      .concatMap(function(p){return p('tags')})
       .distinct()
       .run()
       .collect(callback);
-  });  
+  });
 }
 
 $(document).ready(function(){
-   setUpDatabase();
+   //setUpDatabase();
   $("#add-tags-form").submit(function(e){
     e.preventDefault();
     var formValues = $(e.target).serializeObject();
