@@ -22,7 +22,7 @@ var seedDummyData = function() {
     rethinkdb.connect(rethinkDBEndpoint, function(conn){
       conn.use('passionfruit');
       var insertUser = function(user){
-        rethinkdb.table('passion').insert(user).run();
+        rethinkdb.table('passion').insert(user, true).run();
       };
       users.forEach(insertUser);
       conn.close();
@@ -87,7 +87,7 @@ $(document).ready(function(){
     var user = formValues["name"];
     var tags = formValues["tags"];
     connectToDB(function(table){
-      table.insert({ name: user, tags: tags.split(",") }).run();
+      table.insert({ name: user, tags: tags.split(",") }, true).run();
     });
   });
 
