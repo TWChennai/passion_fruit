@@ -53,8 +53,7 @@ var connectToDB = function(callback){
 var namesStartingWith = function(startingWith, callback) {
   connectToDB(function(table, r) {
     table
-      .filter(r.js("this.name.indexOf('" +  startingWith + "') == 0"))
-      .map(function(passion){return passion('name')})
+      .filter(r.js("this.name.toLowerCase().indexOf('" +  startingWith.toLowerCase() + "') == 0"))
       .run()
       .collect(callback);
   });
@@ -93,7 +92,17 @@ $(document).ready(function(){
 
   $("#name").autocomplete({
     source: function( request, response ) {
-      namesStartingWith(request.term, response);
+      namesStartingWith(request.term, function( data ) {
+            response( $.map( data, function( item ) {
+                return { label: item.name, tags: item.tags};
+              }))
+          });
+    },
+    select: function( event, ui ){
+      $("#tags").tagit("removeAll");
+      ui.item.tags.forEach(function(tag){
+        $("#tags").tagit("createTag",tag);
+      });
     }
   });
 });
