@@ -10,3 +10,10 @@ PassionFruit is built on Javascript, backed by [RethinkDB](http://www.rethinkdb.
 This application is still work-in-progress, future plans include (but do not limit)
 * Automatic mining of interests from a varied set of sources (with the user's approval)
 * Different visualizations
+
+##Setting up
+- Install [RethinkDB](http://www.rethinkdb.com/docs/install/)
+- Configure the rethinkDBEndpoint in application.js
+- ```setUpDatabase``` method should create the database/table on the rethinkDB instance. 
+- ```seedDummyData``` method inserts dummy users and tags them with random programming languages.
+(At present, both these methods need to be involed via browser console).
