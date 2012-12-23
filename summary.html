@@ -11,40 +11,47 @@
   <body>
     <script>
       var fill = d3.scale.category20();
+      var fontSize = d3.scale.log().range([10, 100]);
 
-      allData(function(data){
-        var dimension = data.length * 100;
-        d3.layout.cloud().size([1000, 1000])
-            .words(data.map(function(d) {
-              return {text: d, size: 100};
-            }))
-            .rotate(function() { return ~~(Math.random() * 2) * 90; })
-            .font("Impact")
-            .fontSize(function(d) { return d.size; })
-            .on("end", draw(dimension))
-            .start();
+      getTagsWithCount(function(allTags){
+        result = [];
+        for(i = 0; i < allTags.length; ++i) {
+            var tmp = result.filter(function(d){return d.text == allTags[i];})[0];
+            if(typeof tmp=='undefined')
+                result.push({text: allTags[i], size: 1});
+            else
+              ++tmp.size;
+        }
+
+        d3.layout.cloud()
+          .size([1000, 1000])
+          .timeInterval(10)
+          .font("Impact")
+          .fontSize(function(d) { return fontSize(d.size) ; })
+          .rotate(function(d) { return ~~(Math.random() * 2) * 90; })
+          .padding(1)
+          .words(result)
+          .on("end", draw)
+          .start();
       });
 
-      function draw(dimension) {
-        return function(words){
-          d3.select("body").append("svg")
-              .attr("width", dimension)
-              .attr("height", dimension)
-            .append("g")
-              .attr("transform", "translate(150,150)")
-            .selectAll("text")
-              .data(words)
-            .enter().append("text")
-              .style("font-size", function(d) { return d.size + "px"; })
-              .style("font-family", "Impact")
-              .style("fill", function(d, i) { return fill(i); })
-              .attr("text-anchor", "middle")
-              .attr("transform", function(d) {
-                return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
-              })
-              .on("click", console.log)
-              .text(function(d) { return d.text; });
-          };
+      function draw(words) {
+        d3.select("body").append("svg")
+            .attr("width", 1000)
+            .attr("height", 1000)
+          .append("g")
+            .attr("transform", "translate(150,150)")
+          .selectAll("text")
+            .data(words)
+          .enter().append("text")
+            .style("font-family", "Impact")
+            .style("font-size", function(d) { return d.size + "px"; })
+            .style("fill", function(d, i) { return fill(i); })
+            .attr("text-anchor", "middle")
+            .attr("transform", function(d) {
+              return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+            })
+            .text(function(d) { return d.text; });
       }
     </script>
   </body>

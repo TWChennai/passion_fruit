@@ -1,4 +1,4 @@
-var rethinkDBEndpoint = { host: '10.16.3.131', port: 8080 };
+var rethinkDBEndpoint = { host: '192.168.2.4', port: 8080 };
 
 //TODO:  Move out the setupDatabase and seedDummyData to a different file, after extracting the endpoint setting to local browser store( issue#1).
 var setUpDatabase = function() {
@@ -69,11 +69,10 @@ var tagsStartingWith = function(startingWith, callback) {
   });
 }
 
-var allData = function(callback) {
+var getTagsWithCount = function(callback) {
   connectToDB(function(table, r) {
     table
       .concatMap(function(p){return p('tags')})
-      .distinct()
       .run()
       .collect(callback);
   });
